@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+		<script src="https://unpkg.com/babel-standalone@6/babel.min.js" crossorigin></script>
+		<title>Hello</title>
+		<style>
+			.incorrect{
+				color:red;
+			}
+			#app {
+				text-align: center;
+				font-family: sans-serif;
+			}
+			#problem {
+				font-size: 72px;
+			}
+			#win {
+				font-size: 72px;
+				color:greenyellow;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app" />
+		<script type="text/babel">
+			window.win_score=1
+			class App extends React.Component {
+				constructor(props) {
+					super(props);
+					this.state = {
+						num1: 10,
+						num2: 1,
+						response:"",
+						incorrect:false,
+						score_pos:0,
+						score_neg:0
+					};
+				}
+				renderProblem() {
+					return (
+						<div>
+							<div id="score">
+								+{this.state.score_pos}:-{this.state.score_neg}
+							</div>
+							<div id="problem" className={ (this.state.incorrect)?"incorrect":"" }>
+								{this.state.num1} + {this.state.num2}
+							</div>
+							<div>
+								<input onKeyPress={this.inputKeyPress} onChange={this.updateResponse} value={this.state.response}/>
+							</div>
+						</div> 
+					)
+				}
+				updateResponse = (event) => {
+					this.setState({response: event.target.value})
+				}
+				inputKeyPress = (event) => {
+					if(event.key === "Enter"){
+						const answer=parseInt(this.state.response)
+						if(answer===(this.state.num1 + this.state.num2)){
+							this.setState({
+								num1: Math.ceil(Math.random()*10),
+								num2: Math.ceil(Math.random()*10),
+								response: "",
+								incorrect: false,
+								score_pos:this.state.score_pos + 1
+							})
+						} else{
+								this.setState({
+								response: "",
+								incorrect: true,
+								score_neg:this.state.score_neg + 1
+							})
+						}
+					}
+				}
+
+				renderWin(){
+					return (
+						<div id="win">
+							You Win
+						</div>
+					)
+				}
+
+				render(){
+					if(this.state.score_pos==win_score){
+						return this.renderWin();
+					}
+					else{
+						return this.renderProblem();
+					}
+				}
+			}
+			ReactDOM.render(<App />, document.querySelector("#app"));
+		</script>
+	</body>
+</html>
